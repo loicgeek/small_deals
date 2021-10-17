@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:small_deals/home_page.dart';
 import 'package:small_deals/src/auth/auth_service.dart';
 import 'package:small_deals/src/utils/app_colors.dart';
+import 'package:small_deals/src/utils/app_routes.dart';
 import 'package:small_deals/src/utils/validators.dart';
 import 'package:small_deals/src/widgets/app_back_button.dart';
 import 'package:small_deals/src/widgets/app_button.dart';
@@ -17,7 +18,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late TextEditingController _nameController;
+  late TextEditingController _usernameController;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   late AuthService _authService;
@@ -27,7 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void initState() {
-    _nameController = TextEditingController();
+    _usernameController = TextEditingController();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _authService = AuthService();
@@ -36,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void dispose() {
-    _nameController.dispose();
+    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -76,9 +77,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 20,
                 ),
                 AppInput(
-                  controller: _nameController,
-                  label: "Full name",
-                  placeholder: "Enter full name",
+                  controller: _usernameController,
+                  label: "Username",
+                  placeholder: "Enter username",
                 ),
                 AppInput(
                   controller: _emailController,
@@ -134,12 +135,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             await _authService.registerWithEmailAndPassword(
                           email: _emailController.text,
                           password: _passwordController.text,
+                          username: _usernameController.text,
                         );
                         setState(() {
                           isLoading = false;
                         });
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const HomePage()));
+                        setRoot(context, const HomePage());
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
                           print('The password provided is too weak.');

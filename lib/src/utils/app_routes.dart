@@ -9,3 +9,10 @@ setRoot(
         MaterialPageRoute(builder: (context) => page), (route) => false);
   });
 }
+
+navigateTo(
+  BuildContext context,
+  Widget page,
+) {
+  Navigator.of(context).push(MaterialPageRoute(builder: (context) => page));
+}

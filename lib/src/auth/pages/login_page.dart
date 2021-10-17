@@ -4,6 +4,7 @@ import 'package:small_deals/home_page.dart';
 import 'package:small_deals/src/auth/auth_service.dart';
 import 'package:small_deals/src/auth/pages/register_page.dart';
 import 'package:small_deals/src/utils/app_colors.dart';
+import 'package:small_deals/src/utils/app_routes.dart';
 import 'package:small_deals/src/utils/validators.dart';
 import 'package:small_deals/src/widgets/app_button.dart';
 import 'package:small_deals/src/widgets/app_input.dart';
@@ -150,10 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                                     setState(() {
                                       isLoading = false;
                                     });
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const HomePage()));
+                                    setRoot(context, const HomePage());
                                   } on FirebaseAuthException catch (e) {
                                     if (e.code == 'weak-password') {
                                       print(
