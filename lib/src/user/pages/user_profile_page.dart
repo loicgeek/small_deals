@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:small_deals/src/utils/app_colors.dart';
 import 'package:small_deals/src/utils/app_routes.dart';
 
 import 'edit_user_profile_page.dart';
@@ -52,6 +53,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
             return ListView(
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      image: DecorationImage(
+                        image: NetworkImage("${data['photo_url']}"),
+                        fit: BoxFit.fitHeight,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
                 ListTile(
                   tileColor: Colors.white,
                   title: Text("Username"),

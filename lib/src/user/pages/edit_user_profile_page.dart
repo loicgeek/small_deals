@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:small_deals/src/user/user_service.dart';
+import 'package:small_deals/src/utils/app_colors.dart';
 import 'package:small_deals/src/utils/validators.dart';
 import 'package:small_deals/src/widgets/app_back_button.dart';
 import 'package:small_deals/src/widgets/app_button.dart';
@@ -29,6 +34,9 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
 
   bool isLoading = false;
   late String sex;
+  XFile? currentImage;
+
+  FirebaseStorage storage = FirebaseStorage.instance;
 
   @override
   void initState() {
@@ -53,8 +61,20 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
     super.dispose();
   }
 
-  Map<String, dynamic> getData() {
+  Future<Map<String, dynamic>> getData() async {
     Map<String, dynamic> data = Map();
+    if (currentImage != null) {
+      File file = File(currentImage!.path);
+
+      try {
+        var ref = FirebaseStorage.instance.ref('uploads');
+        var uploadedFile = await ref.putFile(file);
+
+        data["photo_url"] = await uploadedFile.ref.getDownloadURL();
+      } on FirebaseException catch (e) {
+        print(e);
+      }
+    }
     data['username'] = _usernameController.text;
     data['email'] = _emailController.text;
     data['age'] = _ageController.text;
@@ -80,6 +100,49 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
             child: Column(
               children: [
+                GestureDetector(
+                  onTap: () async {
+                    final ImagePicker _picker = ImagePicker();
+                    // Pick an image
+                    final XFile? image =
+                        await _picker.pickImage(source: ImageSource.gallery);
+                    if (image != null) {
+                      setState(() {
+                        currentImage = image;
+                      });
+                    }
+                  },
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          image: currentImage != null
+                              ? DecorationImage(
+                                  image: FileImage(File(currentImage!.path)),
+                                  fit: BoxFit.cover,
+                                )
+                              : DecorationImage(
+                                  image: NetworkImage(
+                                      "${widget.data['photo_url']}"),
+                                  fit: BoxFit.fitHeight,
+                                ),
+                          color: AppColors.primary.withOpacity(.4),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 30,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 AppInput(
                   controller: _usernameController,
                   label: "Username",
@@ -163,9 +226,18 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                   onTap: () async {
                     if (_formKey.currentState!.validate()) {
                       try {
-                        UserService().updateAccount(widget.id, getData());
+                        setState(() {
+                          isLoading = true;
+                        });
+                        UserService().updateAccount(widget.id, await getData());
+                        setState(() {
+                          isLoading = false;
+                        });
                       } catch (e) {
                         print(e);
+                        setState(() {
+                          isLoading = false;
+                        });
                       }
                     }
                   },
