@@ -13,7 +13,8 @@ class UserProfilePage extends StatefulWidget {
   _UserProfilePageState createState() => _UserProfilePageState();
 }
 
-class _UserProfilePageState extends State<UserProfilePage> {
+class _UserProfilePageState extends State<UserProfilePage>
+    with AutomaticKeepAliveClientMixin {
   late User user;
   late DocumentReference userRef;
   late Stream<DocumentSnapshot> userStream;
@@ -123,4 +124,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

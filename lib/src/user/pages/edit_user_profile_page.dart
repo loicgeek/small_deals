@@ -181,7 +181,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                 //   obscureText: true,
                 // ),
                 const SizedBox(
-                  height: 45,
+                  height: 5,
                 ),
                 RadioListTile<String>(
                   value: 'M',
@@ -203,7 +203,6 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                     });
                   },
                 ),
-
                 if (isLoading)
                   const Center(
                     child: Padding(
@@ -226,10 +225,12 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                   onTap: () async {
                     if (_formKey.currentState!.validate()) {
                       try {
+                        print("valid form");
                         setState(() {
                           isLoading = true;
                         });
-                        UserService().updateAccount(widget.id, await getData());
+                        var data = await getData();
+                        await UserService().updateAccount(widget.id, data);
                         setState(() {
                           isLoading = false;
                         });
@@ -239,6 +240,8 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                           isLoading = false;
                         });
                       }
+                    } else {
+                      print("Invalid form");
                     }
                   },
                 ),

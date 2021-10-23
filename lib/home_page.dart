@@ -4,6 +4,7 @@ import 'package:small_deals/src/auth/auth_service.dart';
 import 'package:small_deals/src/auth/pages/login_page.dart';
 import 'package:small_deals/src/products/pages/add_product_page.dart';
 import 'package:small_deals/src/products/pages/home_products_page.dart';
+import 'package:small_deals/src/user/pages/profile_page.dart';
 import 'package:small_deals/src/user/pages/user_profile_page.dart';
 import 'package:small_deals/src/utils/app_colors.dart';
 import 'package:small_deals/src/utils/app_routes.dart';
@@ -50,7 +51,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           HomeProductsPage(),
           AdproductPage(),
-          UserProfilePage(),
+          ProfilePage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
