@@ -8,6 +8,8 @@ class AppInput extends StatelessWidget {
   final String? placeholder;
   final bool obscureText;
   final TextInputType? textInputType;
+  final int? minLines;
+  final int? maxLines;
   const AppInput({
     Key? key,
     required this.controller,
@@ -16,6 +18,8 @@ class AppInput extends StatelessWidget {
     this.placeholder,
     this.obscureText = false,
     this.textInputType,
+    this.minLines,
+    this.maxLines,
   }) : super(key: key);
 
   @override
@@ -42,6 +46,8 @@ class AppInput extends StatelessWidget {
               fontWeight: FontWeight.w400,
               color: AppColors.primaryText,
             ),
+            minLines: minLines,
+            maxLines: maxLines,
             decoration: InputDecoration(
               filled: true,
               contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),

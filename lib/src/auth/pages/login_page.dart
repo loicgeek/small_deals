@@ -108,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                   return Validators.required("Password", value);
                 },
                 obscureText: true,
+                maxLines: 1,
               ),
               const SizedBox(
                 height: 45,
@@ -129,77 +130,75 @@ class _LoginPageState extends State<LoginPage> {
                     child: CircularProgressIndicator(),
                   ),
                 ),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AppButton(
-                        text: "Login",
-                        bgColor: Colors.black,
-                        textColor: Colors.white,
-                        onTap: () async {
-                          if (_formKey.currentState!.validate()) {
-                            try {
-                              setState(() {
-                                isLoading = true;
-                                error = null;
-                              });
-                              var user =
-                                  await _authService.loginWithEmailAndPassword(
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                              );
-                              setState(() {
-                                isLoading = false;
-                              });
-                              setRoot(context, const HomePage());
-                            } on FirebaseAuthException catch (e) {
-                              if (e.code == 'weak-password') {
-                                print('The password provided is too weak.');
-                              } else if (e.code == 'email-already-in-use') {
-                                print(
-                                    'The account already exists for that email.');
-                              }
-
-                              setState(() {
-                                isLoading = false;
-                                error = e.message;
-                              });
-                            } catch (e) {
-                              print(e);
-                              setState(() {
-                                isLoading = false;
-                                e.toString();
-                              });
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppButton(
+                      text: "Login",
+                      bgColor: Colors.black,
+                      textColor: Colors.white,
+                      onTap: () async {
+                        if (_formKey.currentState!.validate()) {
+                          try {
+                            setState(() {
+                              isLoading = true;
+                              error = null;
+                            });
+                            var user =
+                                await _authService.loginWithEmailAndPassword(
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                            );
+                            setState(() {
+                              isLoading = false;
+                            });
+                            setRoot(context, const HomePage());
+                          } on FirebaseAuthException catch (e) {
+                            if (e.code == 'weak-password') {
+                              print('The password provided is too weak.');
+                            } else if (e.code == 'email-already-in-use') {
+                              print(
+                                  'The account already exists for that email.');
                             }
+
+                            setState(() {
+                              isLoading = false;
+                              error = e.message;
+                            });
+                          } catch (e) {
+                            print(e);
+                            setState(() {
+                              isLoading = false;
+                              e.toString();
+                            });
                           }
-                        },
+                        }
+                      },
+                    ),
+                    AppButton(
+                      text: "Create Account",
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 17.0),
+                      child: Text(
+                        "Or",
+                        style: TextStyle(color: Colors.white),
                       ),
-                      AppButton(
-                        text: "Create Account",
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const RegisterPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 17.0),
-                        child: Text(
-                          "Or",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      AppButton(
-                        text: "Continue with Google",
-                        bgColor: Colors.white,
-                        textColor: AppColors.primaryText,
-                      ),
-                    ],
-                  ),
+                    ),
+                    AppButton(
+                      text: "Continue with Google",
+                      bgColor: Colors.white,
+                      textColor: AppColors.primaryText,
+                    ),
+                  ],
                 ),
               ),
             ],
