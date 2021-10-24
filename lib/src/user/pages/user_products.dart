@@ -66,6 +66,12 @@ class _UserProductsState extends State<UserProducts>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          if (product['images'] != null)
+                            Image.network(
+                              product['images'][0],
+                              height: 100,
+                              width: MediaQuery.of(context).size.width,
+                            ),
                           Text(
                             "${product['title']}",
                             style: TextStyle(
